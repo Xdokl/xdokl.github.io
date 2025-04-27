@@ -22,7 +22,7 @@
       padding: 20px;
       border-radius: 10px;
       width: 100%;
-      max-width: 700px;
+      max-width: 800px;
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
     .server-card h1 {
@@ -41,8 +41,16 @@
       border-radius: 8px;
     }
     .identifier {
-      font-size: 12px;
+      font-size: 13px;
       color: #bbb;
+      margin-top: 4px;
+    }
+    .identifier a {
+      color: #4dabf7;
+      text-decoration: none;
+    }
+    .identifier a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -72,16 +80,26 @@
           <h3>Players:</h3>
           ${server.players.map(player => {
             const identifiers = player.identifiers || [];
-            const steam = identifiers.find(id => id.startsWith('steam:')) || 'N/A';
-            const discord = identifiers.find(id => id.startsWith('discord:')) || 'N/A';
-            const license = identifiers.find(id => id.startsWith('license:')) || 'N/A';
+            const steam = identifiers.find(id => id.startsWith('steam:'))?.replace('steam:', '') || 'N/A';
+            const discord = identifiers.find(id => id.startsWith('discord:'))?.replace('discord:', '') || 'N/A';
+            const license = identifiers.find(id => id.startsWith('license:'))?.replace('license:', '') || 'N/A';
+
+            const steamProfile = steam !== 'N/A' ? `https://steamcommunity.com/profiles/${parseInt(steam, 16)}` : null;
+            const discordProfile = discord !== 'N/A' ? `https://discord.com/users/${discord}` : null;
 
             return `
               <div class="player">
-                <strong>${player.name}</strong> (Ping: ${player.ping})
-                <div class="identifier">Steam: ${steam.replace('steam:', '')}</div>
-                <div class="identifier">Discord: ${discord.replace('discord:', '')}</div>
-                <div class="identifier">License: ${license.replace('license:', '')}</div>
+                <strong>${player.name}</strong> 
+                (ID: ${player.id} | Ping: ${player.ping})
+                <div class="identifier">
+                  Steam: ${steamProfile ? `<a href="${steamProfile}" target="_blank">${steam}</a>` : 'N/A'}
+                </div>
+                <div class="identifier">
+                  Discord: ${discordProfile ? `<a href="${discordProfile}" target="_blank">${discord}</a>` : 'N/A'}
+                </div>
+                <div class="identifier">
+                  License: ${license}
+                </div>
               </div>
             `;
           }).join('')}
@@ -103,7 +121,7 @@
   }
 
   fetchServerData();
-  
+
   setInterval(fetchServerData, 60000);
 </script>
 

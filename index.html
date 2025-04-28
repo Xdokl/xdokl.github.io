@@ -85,7 +85,7 @@
             const license = identifiers.find(id => id.startsWith('license:'))?.replace('license:', '') || 'N/A';
 
             const steamProfile = steam !== 'N/A' ? `https://steamcommunity.com/profiles/${parseInt(steam, 16)}` : null;
-            const discordProfile = discord !== 'N/A' ? `https://discord.com/users/${discord}` : null;
+            const discordProfile = discord !== 'N/A' ? `https://discordlookup.com/user/${discord}` : null;
 
             return `
               <div class="player">

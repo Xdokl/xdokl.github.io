@@ -73,6 +73,15 @@
 }
 
 
+#timer-slider {
+  width: 200px;
+  height: auto;
+  background: #444;
+  accent-color: white;
+  cursor: pointer;
+}
+
+
 #slider-value {
   font-size: 14px;
   color: #aaa;
@@ -88,6 +97,20 @@
     #start-button:hover {
       background: #666;
     }
+
+#timer-input {
+  width: 80px;
+  padding: 4px;
+  text-align: center;
+  background: #222;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 6px;
+}
+
+
+
+
 
 
     
@@ -114,6 +137,14 @@
       <label for="level-slider">Start Level</label>
       <input type="range" id="level-slider" min="1" max="10" value="4" />
       <div id="slider-value">4 Beats</div>
+
+      <label for="timer-slider">Flash Time</label>
+      <input type="range" id="timer-slider" min="200" max="1500" step="100" value="700" />
+      <div id="timer-value">700 ms</div>
+
+
+
+      
       <button id="start-button">Start Game</button>
     </div>
   </div>

@@ -17,23 +17,27 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener('click', () => handlePlayerInput(color));
   });
 
-function startGame() {
-  document.getElementById('controls').style.display = 'none'; // hide entire control block
+  function startGame() {
+    document.getElementById('start-button').style.display = 'none';
+      document.getElementById('controls').style.display = 'none'; // hide entire control block
 
-  const startLevel = parseInt(document.getElementById('level-slider').value, 10);
-  sequence = [];
-  playerSequence = [];
-  level = startLevel;
+    const startLevel = parseInt(document.getElementById('level-slider').value, 5);
+    sequence = [];
+    playerSequence = [];
+    level = startLevel;
 
-  for (let i = 0; i < startLevel; i++) {
-    const nextColor = buttons[Math.floor(Math.random() * buttons.length)];
-    sequence.push(nextColor);
+    for (let i = 0; i < startLevel; i++) {
+      const nextColor = buttons[Math.floor(Math.random() * buttons.length)];
+      sequence.push(nextColor);
+    }
+
+    scoreDisplay.textContent = `Level: ${level}`;
+    playSequence();
   }
 
-  scoreDisplay.textContent = `Level: ${level}`;
-  playSequence();
-}
-
+  document.getElementById('timer-slider').addEventListener('input', (e) => {
+  document.getElementById('timer-value').textContent = `${e.target.value} ms`;
+});
 
 
 function playSequence() {

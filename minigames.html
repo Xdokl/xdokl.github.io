@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Minigames</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+              background: #1a1a1a;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #fff;
+            margin-top: 32px;
+            margin-bottom: 24px;
+        }
+        .card-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 900px;
+            min-height: 60vh;
+        }
+        .card {
+            background: #23283a;
+            border-radius: 16px;
+            background: #141414;
+            width: 220px;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.15s, box-shadow 0.15s;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .card-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #4fd1c5;
+        }
+        .card-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .card-desc {
+            color: #b0b8c1;
+            font-size: 0.98em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Select a Minigame</h1>
+    <div class="card-grid">
+        <div class="card" onclick="window.location.href='/simon_says/index.html'">
+            <div class="card-icon">🟩</div>
+            <div class="card-title">Simon Says</div>
+            <div class="card-desc">Repeat the sequence of lights and sounds. Test your memory!</div>
+        </div>
+        <div class="card" onclick="window.location.href='#'">
+            <div class="card-icon">🔓</div>
+            <div class="card-title">Lockpicking (Soon)</div>
+            <div class="card-desc">Pick the lock by quick reaction time, be prepared!</div>
+        </div>
+        <div class="card" onclick="window.location.href='#'">
+            <div class="card-icon">⚡</div>
+            <div class="card-title">VoltLabs (Soon)</div>
+            <div class="card-desc">Connect the circuits and power up the lab. Puzzle your way through!</div>
+        </div>
+
+    </div>
+</body>
+</html>

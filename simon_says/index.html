@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simon Says Minigame</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 120px);
+      grid-template-rows: repeat(2, 120px);
+      gap: 20px;
+      
+    }
+
+    .color-button {
+      width: 120px;
+      height: 120px;
+      border: none;
+      border-radius: 12px;
+      background-color: #11111100;
+      opacity: 1;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .color-button.active {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    #start-button {
+      margin-top: 30px;
+      padding: 12px 24px;
+      font-size: 16px;
+      background: #444;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #score {
+  font-size: 20px;
+  margin: 10px 0 20px;
+  color: #ccc;
+  }
+
+#controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+#level-slider {
+  width: 200px;
+  height: auto;
+  background: #444;
+  accent-color: white;
+  cursor: pointer;
+}
+
+
+#slider-value {
+  font-size: 14px;
+  color: #aaa;
+}
+
+    .color-button#red    { box-shadow: 0 0 10px 2px red inset; }
+    .color-button#green  { box-shadow: 0 0 10px 2px green inset; }
+    .color-button#blue   { box-shadow: 0 0 10px 2px blue inset; }
+    .color-button#yellow { box-shadow: 0 0 10px 2px rgb(255, 217, 0) inset; }
+  
+
+
+    #start-button:hover {
+      background: #666;
+    }
+
+
+    
+  </style>
+</head>
+<body>
+ 
+
+
+
+
+  <div id="game-container">
+    <h1></h1>
+    <div id="score"></div>
+
+    <div class="grid">
+      <button class="color-button" id="red"></button>
+      <button class="color-button" id="green"></button>
+      <button class="color-button" id="blue"></button>
+      <button class="color-button" id="yellow"></button>
+    </div>
+
+    <div id="controls">
+      <label for="level-slider">Start Level</label>
+      <input type="range" id="level-slider" min="1" max="10" value="4" />
+      <div id="slider-value">4 Beats</div>
+      <button id="start-button">Start Game</button>
+    </div>
+  </div>
+
+  <!-- Sounds -->
+  <audio id="sound-red" src="https://s3.amazonaws.com/freecodecamp/simonSound1.mp3"></audio>
+  <audio id="sound-green" src="https://s3.amazonaws.com/freecodecamp/simonSound2.mp3"></audio>
+  <audio id="sound-blue" src="https://s3.amazonaws.com/freecodecamp/simonSound3.mp3"></audio>
+  <audio id="sound-yellow" src="https://s3.amazonaws.com/freecodecamp/simonSound4.mp3"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>

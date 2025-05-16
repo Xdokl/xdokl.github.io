@@ -17,34 +17,39 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener('click', () => handlePlayerInput(color));
   });
 
-  function startGame() {
-    document.getElementById('start-button').style.display = 'none';
+function startGame() {
+  document.getElementById('controls').style.display = 'none'; // hide entire control block
 
-    const startLevel = parseInt(document.getElementById('level-slider').value, 5);
-    sequence = [];
-    playerSequence = [];
-    level = startLevel;
+  const startLevel = parseInt(document.getElementById('level-slider').value, 10);
+  sequence = [];
+  playerSequence = [];
+  level = startLevel;
 
-    for (let i = 0; i < startLevel; i++) {
-      const nextColor = buttons[Math.floor(Math.random() * buttons.length)];
-      sequence.push(nextColor);
+  for (let i = 0; i < startLevel; i++) {
+    const nextColor = buttons[Math.floor(Math.random() * buttons.length)];
+    sequence.push(nextColor);
+  }
+
+  scoreDisplay.textContent = `Level: ${level}`;
+  playSequence();
+}
+
+
+
+function playSequence() {
+  const flashTime = parseInt(document.getElementById('timer-slider').value, 10);
+  let i = 0;
+  const interval = setInterval(() => {
+    const color = sequence[i];
+    activateButton(color, flashTime);
+    i++;
+    if (i >= sequence.length) {
+      clearInterval(interval);
     }
+  }, flashTime + 300); // adds buffer
+}
 
-    scoreDisplay.textContent = `Level: ${level}`;
-    playSequence();
-  }
 
-  function playSequence() {
-    let i = 0;
-    const interval = setInterval(() => {
-      const color = sequence[i];
-      activateButton(color);
-      i++;
-      if (i >= sequence.length) {
-        clearInterval(interval);
-      }
-    }, 550);
-  }
 
   function activateButton(color) {
     const btn = document.getElementById(color);

@@ -183,9 +183,10 @@
           const discord = identifiers.find(id => id.startsWith('discord:'))?.replace('discord:', '') || 'N/A';
           const license = identifiers.find(id => id.startsWith('license:'))?.replace('license:', '') || 'N/A';
 
-          const steamProfile = steam !== 'N/A' ? `https://steamcommunity.com/profiles/${parseInt(steam, 16)}` : null;
+          const steamProfile = steam !== 'N/A' ? `https://www.steamidfinder.com/lookup/${steam}` : null;
           const discordProfile = discord !== 'N/A' ? `https://discordlookup.com/user/${discord}` : null;
 
+          
           return `
             <div class="player">
               <strong>${player.name}</strong> 
@@ -218,7 +219,7 @@
   document.getElementById('playerSearch').addEventListener('input', renderServerCard);
 
   fetchServerData();
-  setInterval(fetchServerData, 60000);
+  setInterval(fetchServerData, 30000);
 </script>
 
 </body>

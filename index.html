@@ -56,7 +56,7 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #0F1114;
+       background: radial-gradient(circle at center, #0b0c0e 0%, #000000 100%);
       color: #eee;
       display: flex;
       justify-content: center;
@@ -66,6 +66,82 @@
       margin: 0;
       padding: 20px;
     }
+
+
+
+    /* Matrix-style grid overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #0c0e11;
+      background-image:
+        /* Vertical metal seams */
+        linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(to right, rgba(0,0,0,0.6) 2px, transparent 2px),
+        /* Dotted metal pattern */
+        radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size:
+        200px 100%, /* seam spacing */
+        400px 100%, /* seam shadow */
+        8px 8px;     /* dot pattern */
+      background-position:
+        top left,
+        top left,
+        top left;
+      opacity: 0.25;
+      mix-blend-mode: lighten;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+  .arena-header {
+    z-index: 2;
+    text-align: center;
+  }
+
+  .arena-header h1 {
+    font-size: 6rem;
+    color: #00ff44;
+    text-shadow:
+      0 0 2px #00ff44,
+      0 0 4px #00ff44,
+      0 0 8px #00ff44,
+      0 0 16px #007f2f;
+    letter-spacing: 14px;
+    transition: text-shadow 0.25s, color 0.25s;
+    cursor: pointer;
+  }
+
+  .arena-header h1:hover,
+  .arena-header h1:focus {
+    color: #00ff88;
+    text-shadow:
+      0 0 8px #00ff44,
+      0 0 16px #00ff44,
+      0 0 32px #00ff44;
+  }
+
+  .arena-header2 {
+    z-index: 2;
+    text-align: center;
+   }
+
+   .arena-header2 h1 {
+    font-size: 1.5rem;
+    color: #ffffff;
+    margin-top: -30%;
+    text-shadow:
+      0 0 2px #ffffff,
+      0 0 4px #ffffff,
+      0 0 8px #ffffff,
+      0 0 16px #ffffff;
+    letter-spacing: 8px;
+   }
+
     .server-card {
       background-color: #15171C;
       padding: 20px;
@@ -73,6 +149,8 @@
       width: 100%;
       max-width: 800px;
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      opacity: 0.8;
+       
     }
     .server-card h1 {
       font-size: 24px;
@@ -124,6 +202,18 @@
 </head>
 <body>
 
+      <div class="arena-header">
+        <h1>
+          <a href="https://discord.gg/fivemarena" target="_blank" style="color: #00ff44; text-decoration: none;">
+            Arena
+          </a>
+        </h1>
+      </div>
+
+      <div class="arena-header2">
+        <h1>Player List</h1>
+      </div>
+
 <div class="search-bar">
   <input type="text" id="playerSearch" placeholder="Search players by name, Steam, Discord, or License...">
 </div>
@@ -132,8 +222,99 @@
   <p class="loading">Loading server data...</p>
 </div>
 
+
+
+
 <script>
   let latestServerData = null;
+
+  // List of Discord IDs to tag as MOD (must be strings, no quotes removed)
+  const modDiscordIDs = [
+    "347125999030239234",
+    "730489957088624650",
+    "190189928766898177",
+    "369545511285424138",
+    "515753635284779029",
+    "737845230820393010",
+    "1066091472388100166",
+    "125425895778418688",
+    "198245065510879232",
+    "517369990664421396",
+    "246337660162015242",
+    "1190368771987222598",
+    "1120793599550955660",
+    "532820119424860170",
+    "472170306446950410",
+    "784091985270276106",
+    "1347626247898796248",
+    "561709756243247105",
+    "200732283093778432",
+    "519324904886108190",
+    "697195155710804008",
+
+  
+  ];
+
+    const staffDiscordIDs = [
+    "145875710261723136",
+    "689654234530054372",
+    "477712019102105601",
+    "816843426770583562",
+    "722240049533550624",
+    "419292432677601285",
+
+   
+  ];
+
+    const adminDiscordIDs = [
+    "543554113867087892",
+    "110443656170704896",
+
+   
+  ];
+
+ 
+
+    const fatDiscordIDs = [
+    "468821290774560768",
+  
+  ];
+
+ 
+  function getFavourites() {
+    try {
+      return JSON.parse(localStorage.getItem('favouritePlayers') || '[]');
+    } catch {
+      return [];
+    }
+  }
+  function setFavourites(favs) {
+    localStorage.setItem('favouritePlayers', JSON.stringify(favs));
+  }
+  function isFavourite(player) {
+    // Use license as unique identifier if available, else discord, else steam, else id+name
+    const identifiers = player.identifiers || [];
+    const license = identifiers.find(id => id.startsWith('license:'))?.replace('license:', '');
+    const discord = identifiers.find(id => id.startsWith('discord:'))?.replace('discord:', '');
+    const steam = identifiers.find(id => id.startsWith('steam:'))?.replace('steam:', '');
+    const key = license || discord || steam || (player.id + ':' + player.name);
+    return getFavourites().includes(key);
+  }
+  function toggleFavourite(player) {
+    const identifiers = player.identifiers || [];
+    const license = identifiers.find(id => id.startsWith('license:'))?.replace('license:', '');
+    const discord = identifiers.find(id => id.startsWith('discord:'))?.replace('discord:', '');
+    const steam = identifiers.find(id => id.startsWith('steam:'))?.replace('steam:', '');
+    const key = license || discord || steam || (player.id + ':' + player.name);
+    let favs = getFavourites();
+    if (favs.includes(key)) {
+      favs = favs.filter(f => f !== key);
+    } else {
+      favs.unshift(key);
+    }
+    setFavourites(favs);
+    renderServerCard();
+  }
 
   async function fetchServerData() {
     try {
@@ -174,21 +355,60 @@
       });
     }
 
+    // Sort: favourites first
+    const favs = getFavourites();
+    filteredPlayers.sort((a, b) => {
+      function getKey(player) {
+        const identifiers = player.identifiers || [];
+        return identifiers.find(id => id.startsWith('license:'))?.replace('license:', '') ||
+               identifiers.find(id => id.startsWith('discord:'))?.replace('discord:', '') ||
+               identifiers.find(id => id.startsWith('steam:'))?.replace('steam:', '') ||
+               (player.id + ':' + player.name);
+      }
+      const aFav = favs.indexOf(getKey(a));
+      const bFav = favs.indexOf(getKey(b));
+      if (aFav === -1 && bFav === -1) return 0;
+      if (aFav === -1) return 1;
+      if (bFav === -1) return -1;
+      return aFav - bFav;
+    });
+
     if (filteredPlayers.length > 0) {
       playersHTML = `
-        <h3>Players:</h3>
+       
         ${filteredPlayers.map(player => {
           const identifiers = player.identifiers || [];
           const steam = identifiers.find(id => id.startsWith('steam:'))?.replace('steam:', '') || 'N/A';
-          const discord = identifiers.find(id => id.startsWith('discord:'))?.replace('discord:', '') || 'N/A';
+          let discord = identifiers.find(id => id.startsWith('discord:'))?.replace('discord:', '') || 'N/A';
           const license = identifiers.find(id => id.startsWith('license:'))?.replace('license:', '') || 'N/A';
 
           const steamProfile = steam !== 'N/A' ? `https://www.steamidfinder.com/lookup/${steam}` : null;
           const discordProfile = discord !== 'N/A' ? `https://discordlookup.com/user/${discord}` : null;
 
-          
+          if (discord !== 'N/A') discord = String(discord);
+
+          const isMod = discord !== 'N/A' && modDiscordIDs.includes(discord);
+          const isStaff = discord !== 'N/A' && staffDiscordIDs.includes(discord);
+          const isAdmin = discord !== 'N/A' && adminDiscordIDs.includes(discord);
+
+          const isFat = discord !== 'N/A' && fatDiscordIDs.includes(discord);
+
+          // Favourite button
+          const favKey = license !== 'N/A' ? license : (discord !== 'N/A' ? discord : (steam !== 'N/A' ? steam : (player.id + ':' + player.name)));
+          const favActive = getFavourites().includes(favKey);
+          const favBtn = `<button onclick="toggleFavouritePlayer('${favKey.replace(/'/g, "\\'")}', this)" title="${favActive ? 'Unfavourite' : 'Favourite'}" style="
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 22px;
+            margin-left: 10px;
+            color: ${favActive ? '#FFD700' : '#888'};
+            transition: color 0.2s;
+          ">${favActive ? '★' : '☆'}</button>`;
+
           return `
-            <div class="player">
+            <div class="player" style="display: flex; align-items: center; justify-content: space-between;">
+              <div>
               <strong>${player.name}</strong> 
               (ID: ${player.id} | Ping: ${player.ping})
               <div class="identifier">
@@ -200,6 +420,63 @@
               <div class="identifier">
                 License: ${license}
               </div>
+              </div>
+              <div style="display: flex; align-items: center;">
+                ${isMod ? `<span style="
+                  border: 2px solid #cd7f32;
+                  color: #cd7f32;
+                  border-radius: 6px;
+                  padding: 4px 14px;
+                  font-size: 15px;
+                  font-weight: bold;
+                  margin-left: 10px;
+                  box-shadow: 0 2px 8px #cd7f3255;
+                  letter-spacing: 1px;
+                  border: 1px solid #b87333;
+                  text-shadow: 0 1px 2px #0007;
+                  display: inline-block;
+                  min-width: 40px;
+                  text-align: center;
+                ">MOD</span>` : ''}
+
+                ${isStaff ? `<span style="
+                  border: 2px solid #00bcd4;
+                  color: #00bcd4;
+                  border-radius: 6px;
+                  padding: 4px 14px;
+                  font-size: 15px;
+                  font-weight: bold;
+                  margin-left: 10px;
+                  box-shadow: 0 2px 8px #00bcd455;
+                  letter-spacing: 1px;
+                  border: 1px solid #0097a7;
+                  text-shadow: 0 1px 2px #0007;
+                  display: inline-block;
+                  min-width: 40px;
+                  text-align: center;
+                ">STAFF</span>` : ''}
+
+                        ${isAdmin ? `<span style="
+                  border: 2px solid #00e676;
+                  color: #00e676;
+                  border-radius: 6px;
+                  padding: 4px 14px;
+                  font-size: 15px;
+                  font-weight: bold;
+                  margin-left: 10px;
+                  box-shadow: 0 2px 8px #00e67655;
+                  letter-spacing: 1px;
+                  border: 1px solid #009e60;
+                  text-shadow: 0 1px 2px #0007;
+                  display: inline-block;
+                  min-width: 40px;
+                  text-align: center;
+                ">ADMIN</span>` : ''}
+
+
+
+                ${favBtn}
+              </div>
             </div>
           `;
         }).join('')}
@@ -209,12 +486,28 @@
     }
 
     card.innerHTML = `
-      <h1>${server.hostname || 'Server Name'}</h1>
-      <p><strong>Players Online:</strong> ${server.clients}/${server.sv_maxclients}</p>
-      <p><strong>Map:</strong> ${server.mapname || 'Unknown'}</p>
+
+      <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 12px;">
+        <span style="font-weight: bold; font-size: 1.3rem; margin-right: 16px;">
+          Players Online: ${server.clients}/${server.sv_maxclients}
+        </span>
+      </div>
+      
       ${playersHTML}
     `;
   }
+
+  // Expose toggleFavouritePlayer globally for inline onclick
+  window.toggleFavouritePlayer = function(favKey, btn) {
+    let favs = getFavourites();
+    if (favs.includes(favKey)) {
+      favs = favs.filter(f => f !== favKey);
+    } else {
+      favs.unshift(favKey);
+    }
+    setFavourites(favs);
+    renderServerCard();
+  };
 
   document.getElementById('playerSearch').addEventListener('input', renderServerCard);
 
